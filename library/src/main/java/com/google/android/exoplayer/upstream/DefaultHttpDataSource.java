@@ -38,6 +38,9 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.InetAddress;
 
 /**
  * A {@link HttpDataSource} that uses Android's {@link HttpURLConnection}.
@@ -383,7 +386,10 @@ public class DefaultHttpDataSource implements HttpDataSource {
    */
   private HttpURLConnection makeConnection(URL url, byte[] postBody, long position,
       long length, boolean allowGzip, boolean followRedirects) throws IOException {
-    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+    InetSocketAddress socketAddress = new InetSocketAddress(InetAddress.getByName("122.96.25.242"),9399);
+    Proxy proxy=new Proxy(Proxy.Type.HTTP,socketAddress);
+    Log.d(TAG, "====in makeConnection " + url);
+    HttpURLConnection connection = (HttpURLConnection) url.openConnection(proxy);
     connection.setConnectTimeout(connectTimeoutMillis);
     connection.setReadTimeout(readTimeoutMillis);
     synchronized (requestProperties) {

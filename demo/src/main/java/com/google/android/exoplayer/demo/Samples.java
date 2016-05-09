@@ -213,6 +213,8 @@ import java.util.Locale;
     new Sample("Apple master playlist",
         "https://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/"
         + "bipbop_4x3_variant.m3u8", Util.TYPE_HLS),
+          new Sample("Le TV",
+                  "http://65.255.32.146/182/32/96/letv-uts/14/ver_00_22-1038632618-avc-420125-aac-32001-2702040-155657976-db70ee048c713186109dfca48e72ed84-1461166590594.m3u8?crypt=82aa7f2e421&b=460&nlh=4096&nlt=60&bf=73&p2p=1&video_type=mp4&termid=2&tss=ios&platid=3&splatid=301&its=0&qos=3&fcheck=0&mltag=84&proxy=1805330700,1805331980,1805330700&uid=3227962428.rp&keyitem=GOw_33YJAAbXYE-cnQwpfLlv_b2zAkYctFVqe5bsXQpaGNn3T1-vhw..&ntm=1462769400&nkey=7c9a5aacff778ab74c848e8a7299adc6&nkey2=a3e1eefab47eaf4fe752b0bfaec740a1&geo=US-0-0-100&p1=0&payff=0&ostype=android&cvid=1217581064718&g3proxy_tm=1462758450&playid=0&vid=25177029&g3proxy_ercode=0&hwtype=un&uip=192.102.204.60&vtype=13&tm=1462758464&mmsid=53688911&uuid=1758462523258904&p2=04&key=c9a085954976c79d729da5eecefc8b16&errc=0&gn=997&rtmcd=104&buss=84&cips=192.102.204.60&jsonp=vjs_146275849214674", Util.TYPE_HLS),
     new Sample("Apple master playlist advanced",
         "https://devimages.apple.com.edgekey.net/streaming/examples/bipbop_16x9/"
         + "bipbop_16x9_variant.m3u8", Util.TYPE_HLS),
@@ -228,7 +230,16 @@ import java.util.Locale;
 
   public static final Sample[] MISC = new Sample[] {
     new Sample("Dizzy", "http://html5demos.com/assets/dizzy.mp4", Util.TYPE_OTHER),
-    new Sample("Apple AAC 10s", "https://devimages.apple.com.edgekey.net/"
+    new Sample("Letv", "http://153.3.167.168/192/14/78/letv-gug/17/ver_00_22-1039861798-avc-254784-aac-32493-14982-560712-7f6e54761eca430f47317d63d2f37750-1461750064985.mp4?crypt=38aa7f2e131400&b=1314&nlh=4096&nlt=60&bf=8000&p2p=1&video_type=mp4&termid=0&tss=no&platid=100&splatid=10000&its=0&qos=5&fcheck=0&mltag=1&proxy=2567153569,2567123691,467476875&uid=2053118450.rp&keyitem=GOw_33YJAAbXYE-cnQwpfLlv_b2zAkYctFVqe5bsXQpaGNn3T1-vhw..&ntm=1494118800&nkey=9a62fe32327d43861350733665c56f5f&nkey2=fd41e82ce2a45e60e5325018669dd9e9&geo=CN-10-127-2&gugtype=1&mmsid=54659091&type=m_liuchang_mp4&errc=0&gn=1114&rtmcd=104&buss=1&cips=122.96.25.242", Util.TYPE_OTHER),
+          new Sample("Youku_1", "http://103.38.59.16/youku/6572A72CF903378AD898046C2/03002001005721B16ECE05003E88037E969A53-228F-72D7-A8C5-B434E9A4547F.mp4", Util.TYPE_OTHER),
+          new Sample("Youku_2", "http://38.98.63.18/youku/6766AC86093E818E33AF36CE5/0300080A0056FCA666C35E2BEEFCF99A5FAF56-554A-D894-0E24-C0C3D42BFEA2.mp4", Util.TYPE_OTHER),
+          new Sample("Youku_3", "http://120.52.73.4/103.38.59.54/youku/6767C944C6477C26314C3276/0300080A0156FCA666C35E2BEEFCF99A5FAF56-554A-D894-0E24-C0C3D42BFEA2.mp4", Util.TYPE_OTHER),
+          new Sample("Youku_4", "http://120.52.73.6/103.38.59.53/youku/6768E60812457BCD54325CAB/0300080A0256FCA666C35E2BEEFCF99A5FAF56-554A-D894-0E24-C0C3D42BFEA2.mp4", Util.TYPE_OTHER),
+          new Sample("Youku_5", "http://120.52.73.7/103.38.59.44/youku/696C3C47FC3478D9FD5A5D12/0300080A0356FCA666C35E2BEEFCF99A5FAF56-554A-D894-0E24-C0C3D42BFEA2.mp4", Util.TYPE_OTHER),
+          new Sample("Youku_6", "http://38.98.63.21/youku/6568E60CEA308132CFB9D41D0/0300080A0456FCA666C35E2BEEFCF99A5FAF56-554A-D894-0E24-C0C3D42BFEA2.mp4", Util.TYPE_OTHER),
+          new Sample("Youku_7", "http://120.52.73.5/103.38.59.16/youku/676C3C47DC4A7CAB71B95716/0300080A0556FCA666C35E2BEEFCF99A5FAF56-554A-D894-0E24-C0C3D42BFEA2.mp4", Util.TYPE_OTHER),
+          new Sample("Youku_8", "http://120.52.73.6/103.38.59.55/youku/656B1F894D477C2631934BDD/0300080A0656FCA666C35E2BEEFCF99A5FAF56-554A-D894-0E24-C0C3D42BFEA2.mp4", Util.TYPE_OTHER),
+          new Sample("Apple AAC 10s", "https://devimages.apple.com.edgekey.net/"
         + "streaming/examples/bipbop_4x3/gear0/fileSequence0.aac", Util.TYPE_OTHER),
     new Sample("Apple TS 10s", "https://devimages.apple.com.edgekey.net/streaming/examples/"
         + "bipbop_4x3/gear1/fileSequence0.ts", Util.TYPE_OTHER),
