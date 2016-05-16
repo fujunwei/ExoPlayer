@@ -86,6 +86,9 @@ public class DefaultHttpDataSource implements HttpDataSource {
   private long bytesSkipped;
   private long bytesRead;
 
+  private String proxyHost;
+  private int proxyPort;
+
   /**
    * @param userAgent The User-Agent string that should be used.
    * @param contentTypePredicate An optional {@link Predicate}. If a content type is
@@ -149,6 +152,34 @@ public class DefaultHttpDataSource implements HttpDataSource {
     this.connectTimeoutMillis = connectTimeoutMillis;
     this.readTimeoutMillis = readTimeoutMillis;
     this.allowCrossProtocolRedirects = allowCrossProtocolRedirects;
+  }
+
+    /**
+   * @param userAgent The User-Agent string that should be used.
+   * @param contentTypePredicate An optional {@link Predicate}. If a content type is
+   *     rejected by the predicate then a {@link HttpDataSource.InvalidContentTypeException} is
+   *     thrown from {@link #open(DataSpec)}.
+   * @param listener An optional listener.
+   * @param connectTimeoutMillis The connection timeout, in milliseconds. A timeout of zero is
+   *     interpreted as an infinite timeout. Pass {@link #DEFAULT_CONNECT_TIMEOUT_MILLIS} to use
+   *     the default value.
+   * @param readTimeoutMillis The read timeout, in milliseconds. A timeout of zero is interpreted
+   *     as an infinite timeout. Pass {@link #DEFAULT_READ_TIMEOUT_MILLIS} to use the default value.
+   * @param allowCrossProtocolRedirects Whether cross-protocol redirects (i.e. redirects from HTTP
+   *     to HTTPS and vice versa) are enabled.
+   */
+  public DefaultHttpDataSource(String userAgent, Predicate<String> contentTypePredicate,
+      TransferListener listener, int connectTimeoutMillis, int readTimeoutMillis,
+      boolean allowCrossProtocolRedirects, String proxyHost, int proxyPort) {
+    this.userAgent = Assertions.checkNotEmpty(userAgent);
+    this.contentTypePredicate = contentTypePredicate;
+    this.listener = listener;
+    this.requestProperties = new HashMap<>();
+    this.connectTimeoutMillis = connectTimeoutMillis;
+    this.readTimeoutMillis = readTimeoutMillis;
+    this.allowCrossProtocolRedirects = allowCrossProtocolRedirects;
+    this.proxyHost = proxyHost;
+    this.proxyPort = proxyPort;
   }
 
   @Override
@@ -386,10 +417,15 @@ public class DefaultHttpDataSource implements HttpDataSource {
    */
   private HttpURLConnection makeConnection(URL url, byte[] postBody, long position,
       long length, boolean allowGzip, boolean followRedirects) throws IOException {
-    InetSocketAddress socketAddress = new InetSocketAddress(InetAddress.getByName("122.96.25.242"),9399);
-    Proxy proxy=new Proxy(Proxy.Type.HTTP,socketAddress);
-    Log.d(TAG, "====in makeConnection " + url);
-    HttpURLConnection connection = (HttpURLConnection) url.openConnection(proxy);
+    Log.d(TAG, "====in makeConnection " + proxyHost + " " + proxyPort + " " + url);
+    HttpURLConnection connection;
+    if (TextUtils.isEmpty(proxyHost)) {
+      connection = (HttpURLConnection) url.openConnection();
+    } else {
+      InetSocketAddress socketAddress = new InetSocketAddress(InetAddress.getByName(proxyHost),proxyPort);
+      Proxy proxy=new Proxy(Proxy.Type.HTTP, socketAddress);
+      connection = (HttpURLConnection) url.openConnection(proxy);
+    }
     connection.setConnectTimeout(connectTimeoutMillis);
     connection.setReadTimeout(readTimeoutMillis);
     synchronized (requestProperties) {
