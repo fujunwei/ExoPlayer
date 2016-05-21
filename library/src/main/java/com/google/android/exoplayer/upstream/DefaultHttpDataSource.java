@@ -31,6 +31,9 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.NoRouteToHostException;
 import java.net.ProtocolException;
+import android.net.Uri;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
@@ -88,6 +91,7 @@ public class DefaultHttpDataSource implements HttpDataSource {
 
   private String proxyHost;
   private int proxyPort;
+  private String cookies;
 
   /**
    * @param userAgent The User-Agent string that should be used.
@@ -168,10 +172,11 @@ public class DefaultHttpDataSource implements HttpDataSource {
    * @param allowCrossProtocolRedirects Whether cross-protocol redirects (i.e. redirects from HTTP
    *     to HTTPS and vice versa) are enabled.
    */
-  public DefaultHttpDataSource(String userAgent, Predicate<String> contentTypePredicate,
+  public DefaultHttpDataSource(Map<String, String> headers, Predicate<String> contentTypePredicate,
       TransferListener listener, int connectTimeoutMillis, int readTimeoutMillis,
       boolean allowCrossProtocolRedirects, String proxyHost, int proxyPort) {
-    this.userAgent = Assertions.checkNotEmpty(userAgent);
+    this.userAgent = Assertions.checkNotEmpty(headers.get("User-Agent"));
+    this.cookies = headers.get("Cookie");
     this.contentTypePredicate = contentTypePredicate;
     this.listener = listener;
     this.requestProperties = new HashMap<>();
@@ -406,6 +411,29 @@ public class DefaultHttpDataSource implements HttpDataSource {
   }
 
   /**
+   * Makes a best guess to infer the type from a media {@link Uri} and an optional overriding file
+   * extension.
+   *
+   * @param uri The {@link Uri} of the media.
+   * @param fileExtension An overriding file extension.
+   * @return The inferred type.
+   */
+  private int inferContentType(URL url, String fileExtension) {
+      Uri uri;
+      try {
+          uri = Uri.parse(url.toURI().toString());
+      } catch (URISyntaxException e) {
+          Log.e(TAG, "URISyntaxException");
+          return Util.TYPE_OTHER;
+      }
+
+      String lastPathSegment = !TextUtils.isEmpty(fileExtension) ? "." + fileExtension
+              : uri.getLastPathSegment();
+      Log.e(TAG, "====Get uri content type " + lastPathSegment);
+      return Util.inferContentType(lastPathSegment);
+  }
+
+  /**
    * Configures a connection and opens it.
    *
    * @param url The url to connect to.
@@ -417,8 +445,9 @@ public class DefaultHttpDataSource implements HttpDataSource {
    */
   private HttpURLConnection makeConnection(URL url, byte[] postBody, long position,
       long length, boolean allowGzip, boolean followRedirects) throws IOException {
-    Log.d(TAG, "====in makeConnection " + proxyHost + " " + proxyPort + " " + url);
     HttpURLConnection connection;
+    Log.d(TAG, "====in makeConnection " + proxyHost + " " + proxyPort + " " + position + " " + length + "\n"
+        + cookies + " " + userAgent + " " + url);
     if (TextUtils.isEmpty(proxyHost)) {
       connection = (HttpURLConnection) url.openConnection();
     } else {
@@ -441,6 +470,7 @@ public class DefaultHttpDataSource implements HttpDataSource {
       connection.setRequestProperty("Range", rangeRequest);
     }
     connection.setRequestProperty("User-Agent", userAgent);
+    if (!TextUtils.isEmpty(cookies)) connection.setRequestProperty("Cookie", cookies);
     if (!allowGzip) {
       connection.setRequestProperty("Accept-Encoding", "identity");
     }

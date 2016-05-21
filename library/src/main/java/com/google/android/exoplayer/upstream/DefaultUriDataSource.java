@@ -21,6 +21,7 @@ import com.google.android.exoplayer.util.Util;
 import android.content.Context;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * A {@link UriDataSource} that supports multiple URI schemes. The supported schemes are:
@@ -107,10 +108,10 @@ public final class DefaultUriDataSource implements UriDataSource {
    * @param allowCrossProtocolRedirects Whether cross-protocol redirects (i.e. redirects from HTTP
    *     to HTTPS and vice versa) are enabled when fetching remote data..
    */
-  public DefaultUriDataSource(Context context, TransferListener listener, String userAgent,
+  public DefaultUriDataSource(Context context, TransferListener listener, Map<String, String> headers,
       boolean allowCrossProtocolRedirects, String proxyHost, int proxyPort) {
     this(context, listener,
-        new DefaultHttpDataSource(userAgent, null, listener,
+        new DefaultHttpDataSource(headers, null, listener,
             DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS,
             DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS, allowCrossProtocolRedirects,
             proxyHost, proxyPort));
