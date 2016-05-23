@@ -41,6 +41,7 @@ public final class DefaultUriDataSource implements UriDataSource {
   private static final String SCHEME_CONTENT = "content";
 
   private final UriDataSource httpDataSource;
+  private  UriDataSource socketDataSource;
   private final UriDataSource fileDataSource;
   private final UriDataSource assetDataSource;
   private final UriDataSource contentDataSource;
@@ -115,6 +116,10 @@ public final class DefaultUriDataSource implements UriDataSource {
             DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS,
             DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS, allowCrossProtocolRedirects,
             proxyHost, proxyPort));
+    socketDataSource = new DefaultSocketDataSource(headers, null, listener,
+            DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS,
+            DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS, allowCrossProtocolRedirects,
+            proxyHost, proxyPort);
   }
 
   /**
@@ -147,6 +152,8 @@ public final class DefaultUriDataSource implements UriDataSource {
       dataSource = assetDataSource;
     } else if (SCHEME_CONTENT.equals(scheme)) {
       dataSource = contentDataSource;
+    } else if (DefaultHttpDataSource.inferContentType(dataSpec.uri, "") == 2) {
+      dataSource = socketDataSource;
     } else {
       dataSource = httpDataSource;
     }
