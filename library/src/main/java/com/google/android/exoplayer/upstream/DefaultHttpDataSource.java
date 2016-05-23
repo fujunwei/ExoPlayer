@@ -418,18 +418,9 @@ public class DefaultHttpDataSource implements HttpDataSource {
    * @param fileExtension An overriding file extension.
    * @return The inferred type.
    */
-  private int inferContentType(URL url, String fileExtension) {
-      Uri uri;
-      try {
-          uri = Uri.parse(url.toURI().toString());
-      } catch (URISyntaxException e) {
-          Log.e(TAG, "URISyntaxException");
-          return Util.TYPE_OTHER;
-      }
-
+  public static int inferContentType(Uri uri, String fileExtension) {
       String lastPathSegment = !TextUtils.isEmpty(fileExtension) ? "." + fileExtension
               : uri.getLastPathSegment();
-      Log.e(TAG, "====Get uri content type " + lastPathSegment);
       return Util.inferContentType(lastPathSegment);
   }
 
@@ -447,8 +438,9 @@ public class DefaultHttpDataSource implements HttpDataSource {
       long length, boolean allowGzip, boolean followRedirects) throws IOException {
     HttpURLConnection connection;
     Log.d(TAG, "====in makeConnection " + proxyHost + " " + proxyPort + " " + position + " " + length + "\n"
-        + cookies + " " + userAgent + " " + url);
-    if (TextUtils.isEmpty(proxyHost)) {
+        + cookies + " " + userAgent + " \n" + url);
+    if (TextUtils.isEmpty(proxyHost) || inferContentType(dataSpec.uri, "") == Util.TYPE_HLS) {
+      Log.d(TAG, "====in makeConnection with no proxy " + url);
       connection = (HttpURLConnection) url.openConnection();
     } else {
       InetSocketAddress socketAddress = new InetSocketAddress(InetAddress.getByName(proxyHost),proxyPort);
